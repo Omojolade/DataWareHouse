@@ -14,14 +14,14 @@ public class FxDeal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "error.deal.null")
     @Column(name = "unique_id", nullable = false, unique = true)
     private String uniqueId;
 
-    @Column(name = "from", nullable = false)
+    @Column(name = "currency_from", nullable = false)
     private Currency from;
 
-    @Column(name = "to", nullable = false)
+    @Column(name = "currency_to", nullable = false)
     private Currency to;
 
     @NotNull

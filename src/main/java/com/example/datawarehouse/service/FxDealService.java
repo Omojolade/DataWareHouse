@@ -6,8 +6,6 @@ public interface FxDealService {
 
     FxDealDTO saveFxDeal(FxDealDTO fxDealDTO);
 
-    List<FxDealDTO> saveMultipleFxDeals(List<FxDealDTO> fxDealDTOList);
-
     FxDealDTO getFxDealById(Long id);
 
     List<FxDealDTO> getAllFxDeals();

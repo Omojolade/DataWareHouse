@@ -46,8 +46,8 @@ public class FxDealValidator {
 
     public List<ValidatorError> validateFxDealById(Long id) {
         ValidationBuilder validationBuilder = new ValidationBuilder();
-        Optional<FxDeal> prescription = fxRepository.findById(id);
-        if (prescription.isEmpty()) {
+        Optional<FxDeal> fxDeal = fxRepository.findById(id);
+        if (fxDeal.isEmpty()) {
             validationBuilder.addError("error.validation.fxDeal.not.exist", id);
         }
         return validationBuilder.build();

@@ -9,7 +9,6 @@ import com.example.datawarehouse.service.mapper.FxDealMapper;
 import com.example.datawarehouse.service.validator.FxDealValidator;
 import com.example.datawarehouse.service.validator.ValidatorError;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;

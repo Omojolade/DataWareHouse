@@ -21,26 +21,26 @@ public class FxDealValidator {
         if(fxDealDTO == null) {
             validation.addError("error.deal.null");
         }else {
-            if(!StringUtils.hasText(fxDealDTO.getFrom()) || !isValidISOCurrencyCode(fxDealDTO.getFrom())){
-                validation.addError("error.deal.currency.from.not.valid", fxDealDTO.getFrom());
+            if(!StringUtils.hasText(fxDealDTO.getFrom()) || !isISOCurrencyCodeValid(fxDealDTO.getFrom())){
+                validation.addError("error.validation.currency.from.not.valid", fxDealDTO.getFrom());
             }
-            if(!StringUtils.hasText(fxDealDTO.getTo()) || !isValidISOCurrencyCode(fxDealDTO.getTo())) {
-                validation.addError("error.deal.currency.to.not.valid", fxDealDTO.getTo());
+            if(!StringUtils.hasText(fxDealDTO.getTo()) || !isISOCurrencyCodeValid(fxDealDTO.getTo())) {
+                validation.addError("error.validation.currency.to.not.valid", fxDealDTO.getTo());
             }
             if(fxDealDTO.getTo().equals(fxDealDTO.getFrom())) {
-                validation.addError("error.deal.currency.same", fxDealDTO.getTo());
+                validation.addError("error.validation.currency.same", fxDealDTO.getTo());
             }
             if(fxDealDTO.getDealTimestamp() == null) {
-                validation.addError("error.deal.timestamp.not.valid");
+                validation.addError("error.validation.timestamp.not.valid");
             }
             if(fxDealDTO.getDealAmount() == null) {
-                validation.addError("error.deal.amount.not.valid");
+                validation.addError("error.validation.amount.not.valid");
             }
         }
         return validation.build();
     }
 
-    private boolean isValidISOCurrencyCode(String currencyCode) {
+    private boolean isISOCurrencyCodeValid(String currencyCode) {
         return Currency.getAvailableCurrencies().stream().anyMatch(c -> c.getCurrencyCode().equals(currencyCode));
     }
 

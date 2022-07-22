@@ -1,15 +1,14 @@
 package com.example.datawarehouse.domain;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Currency;
 
+@Entity
+@Table(name = "fx_deal")
 public class FxDeal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

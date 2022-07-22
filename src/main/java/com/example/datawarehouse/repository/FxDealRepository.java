@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface FxRepository extends JpaRepository<FxDeal, Long> {
+public interface FxDealRepository extends JpaRepository<FxDeal, Long> {
 }

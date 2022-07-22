@@ -1,5 +1,6 @@
 package com.example.datawarehouse.resource;
 
+import com.example.datawarehouse.ResponseWrapper;
 import com.example.datawarehouse.service.FxDealDTO;
 import com.example.datawarehouse.service.FxDealService;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@ResponseWrapper
 @RestController
 @RequestMapping("/api/")
 public class FxDealResource {

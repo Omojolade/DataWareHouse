@@ -8,5 +8,5 @@ public interface FxDealService {
 
     FxDealDTO getFxDealById(Long id);
 
-    List<FxDealService> getAllFxDeals();
+    List<FxDealDTO> getAllFxDeals();
 }

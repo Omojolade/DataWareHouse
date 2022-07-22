@@ -8,34 +8,39 @@ import com.example.datawarehouse.service.mapper.FxDealMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class FxDealServiceImpl implements FxDealService {
     private final FxDealRepository fxRepository;
 
-    private final FxDealMapper fxDealMapper;
+    private final FxDealMapper fxMapper;
 
-    public FxDealServiceImpl(FxDealRepository fxRepository, FxDealMapper fxDealMapper) {
+    public FxDealServiceImpl(FxDealRepository fxRepository, FxDealMapper fxMapper) {
         this.fxRepository = fxRepository;
-        this.fxDealMapper = fxDealMapper;
+        this.fxMapper = fxMapper;
     }
 
     @Override
     public FxDealDTO saveFxDeal(FxDealDTO fxDealDTO) {
-        FxDeal fxDeal = fxDealMapper.toEntity(fxDealDTO);
+        FxDeal fxDeal = fxMapper.toEntity(fxDealDTO);
         fxDeal.setUniqueId(UUID.randomUUID().toString());
         fxDeal = fxRepository.save(fxDeal);
-        return fxDealMapper.toDto(fxDeal);
+        return fxMapper.toDto(fxDeal);
     }
 
     @Override
     public FxDealDTO getFxDealById(Long id) {
-        return null;
+       Optional<FxDeal> fxDeal = fxRepository.findById(id);
+       return fxMapper.toDto(fxDeal.get());
     }
 
     @Override
-    public List<FxDealService> getAllFxDeals() {
-        return null;
+    public List<FxDealDTO> getAllFxDeals() {
+        List<FxDeal> fxDeals = fxRepository.findAll();
+        List<FxDealDTO> fxDealsDTO = fxDeals.stream().map(fxMapper::toDto).collect(Collectors.toList());
+        return fxDealsDTO;
     }
 }

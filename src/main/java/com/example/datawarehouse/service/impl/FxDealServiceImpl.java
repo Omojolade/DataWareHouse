@@ -43,15 +43,13 @@ public class FxDealServiceImpl implements FxDealService {
     @Override
     public List<FxDealDTO> getAllFxDeals() {
         List<FxDeal> fxDeals = fxRepository.findAll();
-        List<FxDealDTO> fxDealsDTO = fxDeals.stream().map(fxMapper::toDto).collect(Collectors.toList());
-        return fxDealsDTO;
+        return fxDeals.stream().map(fxMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<FxDealDTO> saveMultipleFxDeals(List<FxDealDTO> fxDealDTOList) {
         List<FxDealDTO> fxDeals = new ArrayList<>();
-        for(int i = 0; i<fxDealDTOList.size(); i++){
-            FxDealDTO fxDealDTO = fxDealDTOList.get(i);
+        for (FxDealDTO fxDealDTO : fxDealDTOList) {
             fxDeals.add(saveFxDeal(fxDealDTO));
         }
         return fxDeals;

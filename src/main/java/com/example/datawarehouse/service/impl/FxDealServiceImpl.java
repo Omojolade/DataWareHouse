@@ -6,7 +6,10 @@ import com.example.datawarehouse.service.FxDealDTO;
 import com.example.datawarehouse.service.FxDealService;
 import com.example.datawarehouse.service.mapper.FxDealMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,5 +45,15 @@ public class FxDealServiceImpl implements FxDealService {
         List<FxDeal> fxDeals = fxRepository.findAll();
         List<FxDealDTO> fxDealsDTO = fxDeals.stream().map(fxMapper::toDto).collect(Collectors.toList());
         return fxDealsDTO;
+    }
+
+    @Override
+    public List<FxDealDTO> saveMultipleFxDeals(List<FxDealDTO> fxDealDTOList) {
+        List<FxDealDTO> fxDeals = new ArrayList<>();
+        for(int i = 0; i<fxDealDTOList.size(); i++){
+            FxDealDTO fxDealDTO = fxDealDTOList.get(i);
+            fxDeals.add(saveFxDeal(fxDealDTO));
+        }
+        return fxDeals;
     }
 }

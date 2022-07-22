@@ -1,4 +1,4 @@
-package com.example.datawarehouse;
+package com.example.datawarehouse.aop.response;
 
 import java.lang.annotation.*;
 
@@ -6,5 +6,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ResponseWrapper {
-    String message() default "Payload Successful";
+    String message() default "Successful";
 }

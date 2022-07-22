@@ -1,6 +1,6 @@
 package com.example.datawarehouse.resource;
 
-import com.example.datawarehouse.ResponseWrapper;
+import com.example.datawarehouse.aop.response.ResponseWrapper;
 import com.example.datawarehouse.service.FxDealDTO;
 import com.example.datawarehouse.service.FxDealService;
 import org.springframework.http.ResponseEntity;

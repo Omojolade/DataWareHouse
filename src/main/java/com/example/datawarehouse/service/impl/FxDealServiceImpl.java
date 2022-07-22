@@ -1,10 +1,13 @@
 package com.example.datawarehouse.service.impl;
 
+import com.example.datawarehouse.aop.response.error.ValidationException;
 import com.example.datawarehouse.domain.FxDeal;
 import com.example.datawarehouse.repository.FxDealRepository;
 import com.example.datawarehouse.service.FxDealDTO;
 import com.example.datawarehouse.service.FxDealService;
 import com.example.datawarehouse.service.mapper.FxDealMapper;
+import com.example.datawarehouse.service.validator.FxDealValidator;
+import com.example.datawarehouse.service.validator.ValidatorError;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -21,13 +24,18 @@ public class FxDealServiceImpl implements FxDealService {
 
     private final FxDealMapper fxMapper;
 
-    public FxDealServiceImpl(FxDealRepository fxRepository, FxDealMapper fxMapper) {
+    private final FxDealValidator fxValidator;
+
+    public FxDealServiceImpl(FxDealRepository fxRepository, FxDealMapper fxMapper, FxDealValidator fxValidator) {
         this.fxRepository = fxRepository;
         this.fxMapper = fxMapper;
+        this.fxValidator = fxValidator;
     }
 
     @Override
     public FxDealDTO saveFxDeal(FxDealDTO fxDealDTO) {
+        List<ValidatorError> validationErrors = fxValidator.validateFxDeal(fxDealDTO);
+        if(!CollectionUtils.isEmpty(validationErrors)) throw new ValidationException(validationErrors);
         FxDeal fxDeal = fxMapper.toEntity(fxDealDTO);
         fxDeal.setUniqueId(UUID.randomUUID().toString());
         fxDeal = fxRepository.save(fxDeal);
@@ -36,6 +44,8 @@ public class FxDealServiceImpl implements FxDealService {
 
     @Override
     public FxDealDTO getFxDealById(Long id) {
+        List<ValidatorError> validationErrors = fxValidator.validateFxDealById(id);
+        if(!CollectionUtils.isEmpty(validationErrors)) throw new ValidationException(validationErrors);
        Optional<FxDeal> fxDeal = fxRepository.findById(id);
        return fxMapper.toDto(fxDeal.get());
     }

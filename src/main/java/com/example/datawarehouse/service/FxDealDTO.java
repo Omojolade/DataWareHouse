@@ -10,9 +10,9 @@ public class FxDealDTO {
 
     private String uniqueId;
 
-    private Currency from;
+    private String from;
 
-    private Currency to;
+    private String to;
 
     private Instant dealTimestamp;
 
@@ -34,19 +34,19 @@ public class FxDealDTO {
         this.uniqueId = uniqueId;
     }
 
-    public Currency getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(Currency from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public Currency getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(Currency to) {
+    public void setTo(String to) {
         this.to = to;
     }
 

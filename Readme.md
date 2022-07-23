@@ -52,7 +52,7 @@ On the first run, it fails because mysql database is yet to download completely.
 {
 "from": "NGN",
 "to": "USD",
-"dealTimestamp": 1645211796,
+"dealTimestamp": 1655211776,
 "dealAmount": 4345.24
 }
 

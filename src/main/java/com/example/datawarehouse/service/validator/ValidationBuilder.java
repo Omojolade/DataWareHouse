@@ -25,10 +25,6 @@ public class ValidationBuilder {
         return this;
     }
 
-    public boolean isClean() {
-        return CollectionUtils.isEmpty(errors);
-    }
-
     public List<ValidatorError> build() {
         return errors;
     }

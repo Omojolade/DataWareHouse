@@ -1,7 +1,5 @@
 package com.example.datawarehouse.aop.response;
 
-import com.example.datawarehouse.aop.response.ResponseWrapper;
-import com.example.datawarehouse.aop.response.error.CustomApiException;
 import com.example.datawarehouse.aop.response.error.ValidationException;
 import com.example.datawarehouse.service.validator.ValidatorError;
 import org.slf4j.Logger;
@@ -92,29 +90,19 @@ public class ResponseWrapperAdvice implements ResponseBodyAdvice<Object> {
         response.setData(errorResponse);
         log.info("END: writing generic error response to object..");
         return ResponseEntity.status(errorResponse.getStatusCode() != null ? HttpStatus.valueOf(errorResponse.getStatusCode()) : HttpStatus.INTERNAL_SERVER_ERROR)
-            .contentType(MediaType.APPLICATION_PROBLEM_JSON)
-            .body(response);
+                .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                .body(response);
     }
 
     private ErrorResponse problemDelegator(Exception exception, Locale locale) {
         ErrorResponse response = new ErrorResponse();
-        if(exception instanceof CustomApiException) {
-            CustomApiException ex = (CustomApiException) exception;
-            String message;
-            if (ex.isLocaleException()) {
-                message = messageSource.getMessage(ex.getLocaleKey(), ex.getArguments(), locale);
-            } else {
-                message = ex.getMessage();
-            }
-            response.setMessage(message);
-            response.setStatusCode((short)HttpStatus.BAD_REQUEST.value());
-        } else if (exception instanceof ValidationException) {
+        if (exception instanceof ValidationException) {
             ValidationException ex = (ValidationException)exception;
             Function<ValidatorError, String> localeMapper = validatorError ->
-                messageSource.getMessage(validatorError.getErrorKey(), validatorError.getArguments(), locale);
+                    messageSource.getMessage(validatorError.getErrorKey(), validatorError.getArguments(), locale);
             List<String> messages = CollectionUtils.isEmpty(ex.getValidatorErrors())
-                ? List.of()
-                : ex.getValidatorErrors().stream().filter(Objects::nonNull).map(localeMapper).collect(Collectors.toList());
+                    ? List.of()
+                    : ex.getValidatorErrors().stream().filter(Objects::nonNull).map(localeMapper).collect(Collectors.toList());
             response.setStatusCode((short) HttpStatus.UNPROCESSABLE_ENTITY.value());
             response.setMessage(messages);
         } else if(exception instanceof ResponseStatusException) {

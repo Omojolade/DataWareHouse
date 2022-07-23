@@ -6,14 +6,9 @@ import org.mapstruct.Mapper;
 
 
 @Mapper(componentModel = "spring")
-public class FxDealMapper implements EntityMapper<FxDealDTO, FxDeal>{
-    @Override
-    public FxDeal toEntity(FxDealDTO dto) {
-        return null;
-    }
+public interface FxDealMapper extends EntityMapper<FxDeal, FxDealDTO> {
 
-    @Override
-    public FxDealDTO toDto(FxDeal entity) {
-        return null;
-    }
+    FxDeal toEntity(FxDealDTO dto);
+
+    FxDealDTO toDto(FxDeal entity);
 }

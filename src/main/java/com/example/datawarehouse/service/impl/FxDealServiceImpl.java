@@ -33,25 +33,35 @@ public class FxDealServiceImpl implements FxDealService {
 
     @Override
     public FxDealDTO saveFxDeal(FxDealDTO fxDealDTO) {
+        String correlationId = UUID.randomUUID().toString();
         List<ValidatorError> validationErrors = fxValidator.validateFxDeal(fxDealDTO);
         if(!CollectionUtils.isEmpty(validationErrors)) throw new ValidationException(validationErrors);
         FxDeal fxDeal = fxMapper.toEntity(fxDealDTO);
-        fxDeal.setUniqueId(UUID.randomUUID().toString());
+        fxDeal.setId(correlationId);
         fxDeal = fxRepository.save(fxDeal);
         return fxMapper.toDto(fxDeal);
     }
 
     @Override
-    public FxDealDTO getFxDealById(Long id) {
+    public FxDealDTO getFxDealById(String id) {
         List<ValidatorError> validationErrors = fxValidator.validateFxDealById(id);
         if(!CollectionUtils.isEmpty(validationErrors)) throw new ValidationException(validationErrors);
-       Optional<FxDeal> fxDeal = fxRepository.findById(id);
-       return fxMapper.toDto(fxDeal.get());
+        Optional<FxDealDTO> optionalFxDeal = fxRepository.findById(id).map(fxMapper::toDto);
+        return optionalFxDeal.orElseThrow(() -> new ValidationException(List.of()));
     }
 
     @Override
     public List<FxDealDTO> getAllFxDeals() {
         List<FxDeal> fxDeals = fxRepository.findAll();
         return fxDeals.stream().map(fxMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FxDealDTO> saveMultipleFxDeals(List<FxDealDTO> fxDealDTOList) {
+        List<FxDealDTO> fxDeals = new ArrayList<>();
+        for (FxDealDTO fxDealDTO : fxDealDTOList) {
+            fxDeals.add(saveFxDeal(fxDealDTO));
+        }
+        return fxDeals;
     }
 }

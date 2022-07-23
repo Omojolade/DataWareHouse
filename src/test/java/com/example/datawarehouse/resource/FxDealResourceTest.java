@@ -1,6 +1,7 @@
 package com.example.datawarehouse.resource;
 
 
+import com.example.datawarehouse.DataWarehouseApplication;
 import com.example.datawarehouse.domain.FxDeal;
 import com.example.datawarehouse.repository.FxDealRepository;
 import com.example.datawarehouse.service.FxDealDTO;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
-@SpringBootTest(classes = FxDealResource.class)
+@SpringBootTest(classes = DataWarehouseApplication.class)
 public class FxDealResourceTest {
 
     @Autowired
@@ -63,8 +65,8 @@ public class FxDealResourceTest {
 
     private final static String DEFAULT_UNIQUE_ID = "4";
     private final static BigDecimal DEFAULT_DEAL_AMOUNT = BigDecimal.ONE;
-    private final static Currency DEFAULT_FROM_CURRENCY = Currency.getInstance("NGN");
-    private final static Currency DEFAULT_TO_CURRENCY = Currency.getInstance("USD");
+    private final static Currency DEFAULT_FROM = Currency.getInstance("NGN");
+    private final static Currency DEFAULT_TO = Currency.getInstance("USD");
     private final static Instant DEFAULT_DEAL_TIMESTAMP = Instant.now();
 
     @BeforeEach
@@ -72,12 +74,17 @@ public class FxDealResourceTest {
         fxDeal = createDeal();
     }
 
+    @AfterEach
+    public void destroyTest() {
+        fxDealRepository.deleteAll();
+    }
+
     public static FxDeal createDeal() {
         FxDeal fxDeal = new FxDeal();
         fxDeal.setId(DEFAULT_UNIQUE_ID);
         fxDeal.setDealAmount(DEFAULT_DEAL_AMOUNT);
-        fxDeal.setFrom(DEFAULT_FROM_CURRENCY);
-        fxDeal.setTo(DEFAULT_TO_CURRENCY);
+        fxDeal.setFrom(DEFAULT_FROM);
+        fxDeal.setTo(DEFAULT_TO);
         fxDeal.setDealTimestamp(DEFAULT_DEAL_TIMESTAMP);
         return fxDeal;
     }
@@ -89,7 +96,7 @@ public class FxDealResourceTest {
         // Create the FxDeal
         FxDealDTO fxDealDTO = fxDealMapper.toDto(fxDeal);
         restFxDealMockMvc
-            .perform(post("/api/v1/create/fx-deal").contentType(MediaType.APPLICATION_JSON)
+            .perform(post("/api/create/fx-deal").contentType(MediaType.APPLICATION_JSON)
                 .content(convertObjectToJsonBytes(fxDealDTO)))
             .andExpect(status().isCreated());
 
@@ -99,8 +106,8 @@ public class FxDealResourceTest {
         FxDeal testFxDeal = fxDealList.get(fxDealList.size() - 1);
         assertThat(testFxDeal.getDealAmount()).isEqualTo(DEFAULT_DEAL_AMOUNT);
         assertThat(testFxDeal.getDealTimestamp()).isEqualTo(DEFAULT_DEAL_TIMESTAMP);
-        assertThat(testFxDeal.getFrom()).isEqualTo(DEFAULT_FROM_CURRENCY);
-        assertThat(testFxDeal.getTo()).isEqualTo(DEFAULT_TO_CURRENCY);
+        assertThat(testFxDeal.getFrom()).isEqualTo(DEFAULT_FROM);
+        assertThat(testFxDeal.getTo()).isEqualTo(DEFAULT_TO);
     }
 
     @Test
@@ -111,12 +118,12 @@ public class FxDealResourceTest {
 
         // Get all the fx deals
         restFxDealMockMvc
-            .perform(get("/api/v1/fx-deals"))
+            .perform(get("/api/fx-deals"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.data.content.[*].dealAmount").value(hasItem(DEFAULT_DEAL_AMOUNT.intValue())))
-            .andExpect(jsonPath("$.data.content.[*].fromCurrency").value(hasItem(DEFAULT_FROM_CURRENCY.getCurrencyCode())))
-            .andExpect(jsonPath("$.data.content.[*].toCurrency").value(hasItem(DEFAULT_TO_CURRENCY.getCurrencyCode())));
+            .andExpect(jsonPath("$.data.[*].dealAmount").value(hasItem(DEFAULT_DEAL_AMOUNT.intValue())))
+            .andExpect(jsonPath("$.data.[*].from").value(hasItem(DEFAULT_FROM.getCurrencyCode())))
+            .andExpect(jsonPath("$.data.[*].to").value(hasItem(DEFAULT_TO.getCurrencyCode())));
     }
 
 
@@ -128,12 +135,12 @@ public class FxDealResourceTest {
 
         // Get all the fx deals
         restFxDealMockMvc
-            .perform(get("/api/v1/fx-deal/"+fxDeal .getId()))
+            .perform(get("/api/fx-deal/"+fxDeal .getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.data.dealAmount").value(DEFAULT_DEAL_AMOUNT.intValue()))
-            .andExpect(jsonPath("$.data.fromCurrency").value(DEFAULT_FROM_CURRENCY.getCurrencyCode()))
-            .andExpect(jsonPath("$.data.toCurrency").value(DEFAULT_TO_CURRENCY.getCurrencyCode()));
+            .andExpect(jsonPath("$.data.from").value(DEFAULT_FROM.getCurrencyCode()))
+            .andExpect(jsonPath("$.data.to").value(DEFAULT_TO.getCurrencyCode()));
     }
 
 }

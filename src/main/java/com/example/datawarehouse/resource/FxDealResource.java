@@ -35,15 +35,6 @@ public class FxDealResource {
                 .body(fxDeal);
     }
 
-    @PostMapping("/fx-deals")
-    public ResponseEntity<List<FxDealDTO>> saveMultipleFxDeals(@Valid @RequestBody List<FxDealDTO> fxDealDTOs) throws URISyntaxException {
-        log.debug("REST request to save fxDeals : {}", fxDealDTOs);
-        List<FxDealDTO> fxDeals = fxDealService.saveMultipleFxDeals(fxDealDTOs);
-        return ResponseEntity
-                .created(new URI(String.format("%s%s%s", APPLICATION_NAME, "/fx-deal/", fxDeals.get(0).getId())))
-                .body(fxDeals);
-    }
-
     @GetMapping("/fx-deal/{id}")
     public ResponseEntity<FxDealDTO> getFxDealById( @PathVariable("id") String id) {
         log.debug("REST request to get fxDeal by : {}", id);
@@ -52,7 +43,7 @@ public class FxDealResource {
     }
 
     @GetMapping("/fx-deals")
-    public ResponseEntity<List<FxDealDTO>> getAllFxDeal() {
+    public ResponseEntity<List<FxDealDTO>> getAllFxDeals() {
         log.debug("REST request to get list of fxDeals");
         return ResponseEntity.ok().body(fxDealService.getAllFxDeals());
     }
